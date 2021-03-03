@@ -5321,12 +5321,6 @@ public final class Settings {
          */
         public static final String STATUS_BAR_CLOCK_COLOR = "status_bar_clock_color";
 
-        /**
-         * Clock font style
-         * @hide
-         */
-        public static final String STATUS_BAR_CLOCK_FONT_STYLE = "status_bar_clock_font_style";
-
        /**
          * Position of date
          * 0 - Left of clock
