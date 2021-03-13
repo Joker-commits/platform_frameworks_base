@@ -22,6 +22,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.Paint.Style;
+import android.graphics.Typeface;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +34,9 @@ import com.android.systemui.colorextraction.SysuiColorExtractor;
 import com.android.systemui.plugins.ClockPlugin;
 
 import java.util.TimeZone;
+
+import static com.android.systemui.statusbar.phone
+        .KeyguardClockPositionAlgorithm.CLOCK_USE_DEFAULT_Y;
 
 /**
  * Plugin for the default clock face used only to provide a preview.
@@ -62,7 +66,7 @@ public class MNMLMinimalClockController implements ClockPlugin {
     /**
      * Root view of clock.
      */
-    private ClockLayout mBigClockView;
+    private ClockLayout mView;
 
     /**
      * Text clock in preview view hierarchy.
@@ -85,10 +89,10 @@ public class MNMLMinimalClockController implements ClockPlugin {
     }
 
     private void createViews() {
-        mBigClockView = (ClockLayout) mLayoutInflater
+        mView = (ClockLayout) mLayoutInflater
                 .inflate(R.layout.digital_mnml_minimal, null);
-        mClock = mBigClockView.findViewById(R.id.clock);
-        mDate = mBigClockView.findViewById(R.id.date);
+        mClock = mView.findViewById(R.id.clock);
+        mDate = mView.findViewById(R.id.date);
         ColorExtractor.GradientColors colors = mColorExtractor.getColors(
                 WallpaperManager.FLAG_LOCK);
         setColorPalette(colors.supportsDarkText(), colors.getColorPalette());
@@ -96,7 +100,7 @@ public class MNMLMinimalClockController implements ClockPlugin {
 
     @Override
     public void onDestroyView() {
-        mBigClockView = null;
+        mView = null;
         mClock = null;
         mDate = null;
     }
@@ -113,7 +117,7 @@ public class MNMLMinimalClockController implements ClockPlugin {
 
     @Override
     public Bitmap getThumbnail() {
-        return BitmapFactory.decodeResource(mResources, R.drawable.default_thumbnail);
+        return BitmapFactory.decodeResource(mResources, R.drawable.mnmlminimal_thumbnail);
     }
 
     @Override
@@ -122,6 +126,9 @@ public class MNMLMinimalClockController implements ClockPlugin {
         View previewView = mLayoutInflater.inflate(R.layout.digital_mnml_minimal, null);
         TextClock previewTime = previewView.findViewById(R.id.clock);
         TextClock previewDate = previewView.findViewById(R.id.date);
+
+        previewTime.setTextColor(Color.WHITE);
+        previewDate.setTextColor(Color.BLACK);
 
         // Initialize state of plugin before generating preview.
         ColorExtractor.GradientColors colors = mColorExtractor.getColors(
@@ -134,27 +141,26 @@ public class MNMLMinimalClockController implements ClockPlugin {
         GradientDrawable dateBg = (GradientDrawable) previewDate.getBackground();
         dateBg.setColor(accentColor);
         dateBg.setStroke(0,Color.TRANSPARENT);
-        onTimeTick();
 
         return mRenderer.createPreview(previewView, width, height);
     }
 
     @Override
     public View getView() {
-        return null;
+        if (mView == null) {
+            createViews();
+        }
+        return mView;
     }
 
     @Override
     public View getBigClockView() {
-        if (mBigClockView  == null) {
-            createViews();
-        }
-        return mBigClockView;
+        return null;
     }
 
     @Override
     public int getPreferredY(int totalHeight) {
-        return totalHeight / 2;
+        return CLOCK_USE_DEFAULT_Y;
     }
 
     @Override
@@ -162,6 +168,14 @@ public class MNMLMinimalClockController implements ClockPlugin {
 
     @Override
     public void setTextColor(int color) {
+    }
+
+    public void setTypeface(Typeface tf) {
+        mClock.setTypeface(tf);
+    }
+
+    public void setDateTypeface(Typeface tf) {
+        mDate.setTypeface(tf);
     }
 
     @Override
@@ -181,7 +195,7 @@ public class MNMLMinimalClockController implements ClockPlugin {
 
     @Override
     public void setDarkAmount(float darkAmount) {
-        mBigClockView.setDarkAmount(darkAmount);
+        mView.setDarkAmount(darkAmount);
     }
 
     @Override
