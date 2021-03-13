@@ -24,7 +24,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextClock;
 import android.content.Context;
-import com.android.internal.util.du.Utils;
+import com.android.internal.util.colt.ColtUtils;
 import android.text.Html;
 import com.airbnb.lottie.LottieAnimationView;
 
@@ -103,10 +103,10 @@ public class RainbowCircleClockController implements ClockPlugin {
         int mAccentColor = mContext.getResources().getColor(R.color.lockscreen_clock_accent_color);
         int mWhiteColor = mContext.getResources().getColor(R.color.lockscreen_clock_white_color);
 
-        if(Utils.useLockscreenClockMinuteAccentColor(mContext) && Utils.useLockscreenClockHourAccentColor(mContext)) {
+        if(ColtUtils.useLockscreenClockMinuteAccentColor(mContext) && ColtUtils.useLockscreenClockHourAccentColor(mContext)) {
              mClock.setFormat12Hour(Html.fromHtml("<font color=" + mAccentColor + ">hh</font>:<font color=" + mAccentColor + ">mm</font>"));
              mClock.setFormat24Hour(Html.fromHtml("<font color=" + mAccentColor + ">kk</font>:<font color=" + mAccentColor + ">mm</font>"));
-        } else if(Utils.useLockscreenClockHourAccentColor(mContext)) {
+        } else if(ColtUtils.useLockscreenClockHourAccentColor(mContext)) {
              mClock.setFormat12Hour(Html.fromHtml("<font color=" + mAccentColor + ">hh</font>:<font color=" + mWhiteColor + ">mm</font>"));
              mClock.setFormat24Hour(Html.fromHtml("<font color=" + mAccentColor + ">kk</font>:<font color=" + mWhiteColor + ">mm</font>"));
         } else {
